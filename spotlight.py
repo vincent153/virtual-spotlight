@@ -1,7 +1,16 @@
 import numpy as np
 import cv2
 import random
-def gkern(l=5, sig=1.):
+import argparse
+import sys
+
+def prepareArgs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--kernal_size','-k',help='size of spotlight kernal',type=int,default=300)
+    parser.add_argument('--input','-i',help='input file name',type=str,required=True)
+    return parser.parse_args()
+
+def gaussian_kernal(l=5, sig=1.):
     """
     creates gaussian kernel with side length l and a sigma of sig
     """
@@ -11,10 +20,9 @@ def gkern(l=5, sig=1.):
 
     kernel = np.exp(-(xx**2 + yy**2) / (2. * sig**2))
     return kernel
-    #return kernel / np.sum(kernel)
 
 def get_spotlight(size=300):
-    kernal = gkern(size,size/10)
+    kernal = gaussian_kernal(size,size/10)
     spotlight = np.zeros([size,size],np.uint8)
     min_p = kernal.min()
     max_p = kernal.max()
@@ -44,6 +52,7 @@ def virtual_spotlight(img_path,spot_size=300):
     src = cv2.imread(img_path)
 
     if src is None:
+        sys.exit(0)
         return
 
     dst = src.copy()
@@ -70,15 +79,12 @@ def virtual_spotlight(img_path,spot_size=300):
             dst[y][x][1] = truncate(newPixg)
             dst[y][x][0] = truncate(newPixb)
 
-    #img_spot = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR)
     cv2.imshow('spot',dst)
     cv2.imshow('src',src)
     cv2.waitKey()
-    cv2.imwrite('out.jpg',dst)
+
 
 if __name__ == '__main__': 
-    import sys
-    file_name = sys.argv[1]
-    spot_size = int(sys.argv[2])
-    virtual_spotlight(file_name, spot_size)
+    args = prepareArgs()
+    virtual_spotlight(args.input, args.kernal_size)
 
