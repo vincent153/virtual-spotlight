@@ -3,6 +3,7 @@ import cv2
 import random
 import argparse
 import sys
+import time
 
 def prepareArgs():
     parser = argparse.ArgumentParser()
