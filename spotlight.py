@@ -4,12 +4,8 @@ import random
 import argparse
 import sys
 import time
-<<<<<<< HEAD
-import subpropcess
-=======
-import thread
 
->>>>>>> b101ab29380d48f6d32eea302464a4e11b3db987
+import subpropcess
 def prepareArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('--kernal_size','-k',help='size of spotlight kernal',type=int,default=300)
